@@ -1,3 +1,25 @@
+<?php
+  session_start();
+  include "../dao/user.php";
+  if(isset($_POST["login"])){
+    $uname=$_POST["uname"];
+    $psw=$_POST["psw"];
+    $user = checkuser($uname, $psw);
+    if(isset($user)&&(is_array($user))&&(count($user)>0)){
+      extract($user);
+      if($role==1){
+        $_SESSION['s_user']=$user;
+        header('location: index.php');
+      }else{
+        $tb="Username hoặc Password đã sai";
+      }
+    }else{
+      $tb="Username hoặc Password đã sai";
+    }
+    
+  }
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,29 +94,26 @@ span.psw {
 </head>
 <body>
 <div class="boxcenter">
-<h2>Login Form</h2>
+<h2>Admin Login</h2>
 
-<form action="/action_page.php" method="post">
+<form action="login.php" method="post">
   <div class="imgcontainer">
-    <img src="img_avatar2.png" alt="Avatar" class="avatar">
+    <img src="../layout/images/logo.jpg" alt="Avatar" class="avatar">
 
   <div class="container">
-    <label for="uname"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="uname" required>
+    <label for="uname"><b>Tên Đăng Nhập</b></label>
+    <input type="text" placeholder="Nhập username" name="uname" required>
 
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
-        
-    <button type="submit">Login</button>
-    <label>
-      <input type="checkbox" checked="checked" name="remember"> Remember me
-    </label>
+    <label for="psw"><b>Mật Khẩu</b></label>
+    <input type="password" placeholder="Nhập password" name="psw" required>
+    <?php
+      if(isset($tb)&&($tb!="")){
+        echo "<h3 style='color:red'>".$tb."</h3>";
+      }
+    ?>
+    <button type="submit" name="login">Đăng nhập</button>
   </div>
 
-  <div class="container" style="background-color:#f1f1f1">
-    <button type="button" class="cancelbtn">Cancel</button>
-    <span class="psw">Forgot <a href="#">password?</a></span>
-  </div>
 </form>
 </div>
 </body>
